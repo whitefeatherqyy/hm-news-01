@@ -1,18 +1,15 @@
 <template>
   <div>
-    这是一个根组件
-    <van-button type="info">信息按钮</van-button>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style>
- div {
-   font-size: 18px;
- }
+div {
+  font-size: 18px;
+}
 </style>
