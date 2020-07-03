@@ -1,14 +1,11 @@
 <template>
   <div>
-    <hm-header><template>登录</template></hm-header>
+    <hm-header>
+      <template>登录</template>
+    </hm-header>
     <hm-logo></hm-logo>
     <van-form @submit="onSubmit">
-      <van-field
-        v-model="user.username"
-        label="用户名"
-        placeholder="用户名"
-        :rules="rules.username"
-      />
+      <van-field v-model="user.username" label="用户名" placeholder="用户名" :rules="rules.username" />
       <van-field
         v-model="user.password"
         type="password"
@@ -17,12 +14,13 @@
         :rules="rules.password"
       />
       <div style="margin: 20px;">
-        <van-button round block type="info" native-type="submit">
-          提交
-        </van-button>
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
-    <p>还没有账号？去<router-link to="/register">注册</router-link></p>
+    <p>
+      还没有账号？去
+      <router-link to="/register">注册</router-link>
+    </p>
   </div>
 </template>
 
@@ -62,8 +60,10 @@ export default {
       //   console.log(res)
       if (res.data.statusCode === 200) {
         this.$toast.success('登陆成功')
-        localStorage.setItem('hm-news', JSON.stringify(res.data.token))
-        this.$router.push('/')
+        // console.log(res)
+        localStorage.setItem('token', res.data.data.token)
+        localStorage.setItem('user_id', res.data.data.user.id)
+        this.$router.push('/user')
       } else {
         this.$toast.fail('密码或用户名错误，请重新登陆')
       }

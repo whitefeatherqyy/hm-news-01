@@ -8,7 +8,7 @@
 export default {}
 </script>
 
-<style>
+<style lang="less" scoped>
 div {
   font-size: 18px;
 }
