@@ -15,7 +15,7 @@
           ></span>
           {{ nickname }}
         </p>
-        <p class="time">{{ time }}</p>
+        <p class="time">{{ time | timer}}</p>
       </div>
       <div class="arrow">
         <span class="iconfont iconjiantou1"></span>
@@ -37,12 +37,15 @@
       <hm-navbar @click="$router.push('/user_edit')">
         <template v-slot:title>设置</template>
       </hm-navbar>
+      <hm-navbar @click="logout">
+        <template v-slot:title>退出</template>
+      </hm-navbar>
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 export default {
   data() {
     return {
@@ -54,14 +57,32 @@ export default {
   },
   //   获取相关信息
   async created() {
-    const id = localStorage.getItem('user_id')
+    // const id = localStorage.getItem('user_id')
+    // console.log(this.$route)
+    const id = this.$route.query.id
     const res = await this.$axios.get(`/user/${id}`)
-    console.log(res.data.data)
+    // console.log(res.data.data)
     const { gender, nickname } = res.data.data
     this.gender = gender
     this.nickname = nickname
-    this.time = moment(res.data.data.create_date).format('YYYY-MM-DD')
+    this.time = res.data.data.create_date
     this.imgurl = this.$axios.defaults.baseURL + res.data.data.head_img
+  },
+  methods: {
+    async logout() {
+      try {
+        await this.$dialog.confirm({
+          title: '提示',
+          message: '确认退出登录么？'
+        })
+        // 删除token等并回到登录页面
+        localStorage.removeItem('token')
+        localStorage.removeItem('user_id')
+        this.$router.push('/login')
+      } catch {
+        this.$toast.fail('取消退出')
+      }
+    }
   }
 }
 </script>

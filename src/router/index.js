@@ -30,5 +30,9 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
+// 解决路由重复跳转同一页面的报错问题
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router

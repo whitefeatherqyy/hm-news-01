@@ -6,15 +6,26 @@ import hmlogo from './components/HmLogo.vue'
 import hmnavbar from './components/HmNavBar.vue'
 // 导入axios
 import axios from 'axios'
-
 // 按需导入vant
-import { Button, Field, Form, Toast } from 'vant'
+import {
+  Button,
+  Field,
+  Form,
+  Toast,
+  Dialog,
+  Cell,
+  CellGroup,
+  Radio,
+  RadioGroup,
+  Uploader
+} from 'vant'
 // 该库会自动给html设置font-size
 import 'amfe-flexible'
 
 // 导入css文件
 import './style/common.less'
 import './style/iconfont.less'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 
@@ -23,7 +34,12 @@ Vue.use(Button)
 Vue.use(Field)
 Vue.use(Form)
 Vue.use(Toast)
-
+Vue.use(Dialog)
+Vue.use(Cell)
+Vue.use(CellGroup)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Uploader)
 // 定义全局组件
 Vue.component('hm-header', hmheader)
 Vue.component('hm-logo', hmlogo)
@@ -50,6 +66,11 @@ axios.interceptors.response.use(res => {
     localStorage.removeItem('user_id')
   }
   return res
+})
+
+// 定义全局过滤器
+Vue.filter('timer', input => {
+  return moment(input).format('YYYY-MM-DD')
 })
 new Vue({
   router,

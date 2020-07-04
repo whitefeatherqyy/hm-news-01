@@ -63,7 +63,14 @@ export default {
         // console.log(res)
         localStorage.setItem('token', res.data.data.token)
         localStorage.setItem('user_id', res.data.data.user.id)
-        this.$router.push('/user')
+        // this.$router.push('/user')
+        // this.$router.push(`/user?id=${res.data.data.user.id}`)
+        this.$router.push({
+          path: '/user',
+          query: {
+            id: res.data.data.user.id
+          }
+        })
       } else {
         this.$toast.fail('密码或用户名错误，请重新登陆')
       }
