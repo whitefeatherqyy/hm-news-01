@@ -17,7 +17,8 @@ import {
   CellGroup,
   Radio,
   RadioGroup,
-  Uploader
+  Uploader,
+  List
 } from 'vant'
 // 该库会自动给html设置font-size
 import 'amfe-flexible'
@@ -40,6 +41,7 @@ Vue.use(CellGroup)
 Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Uploader)
+Vue.use(List)
 // 定义全局组件
 Vue.component('hm-header', hmheader)
 Vue.component('hm-logo', hmlogo)
@@ -71,6 +73,9 @@ axios.interceptors.response.use(res => {
 // 定义全局过滤器
 Vue.filter('timer', input => {
   return moment(input).format('YYYY-MM-DD')
+})
+Vue.filter('timer2', input => {
+  return moment(input).format('YYYY-MM-DD HH:MM')
 })
 new Vue({
   router,

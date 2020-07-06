@@ -15,18 +15,18 @@
           ></span>
           {{ nickname }}
         </p>
-        <p class="time">{{ time | timer}}</p>
+        <p class="time">{{ time | timer }}</p>
       </div>
       <div class="arrow">
         <span class="iconfont iconjiantou1"></span>
       </div>
     </div>
     <div class="my">
-      <hm-navbar>
+      <hm-navbar @click="$router.push('/myfollow')">
         <template v-slot:title>我的关注</template>
         <template v-slot:tip>关注的用户</template>
       </hm-navbar>
-      <hm-navbar>
+      <hm-navbar @click="$router.push('/mycomment')">
         <template v-slot:title>我的跟帖</template>
         <template v-slot:tip>跟帖/回复</template>
       </hm-navbar>
