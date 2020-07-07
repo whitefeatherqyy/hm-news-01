@@ -4,6 +4,7 @@ import router from './router'
 import hmheader from './components/HmHeader.vue'
 import hmlogo from './components/HmLogo.vue'
 import hmnavbar from './components/HmNavBar.vue'
+import hmpost from './components/HmPost.vue'
 // 导入axios
 import axios from 'axios'
 // 按需导入vant
@@ -18,7 +19,9 @@ import {
   Radio,
   RadioGroup,
   Uploader,
-  List
+  List,
+  Tab,
+  Tabs
 } from 'vant'
 // 该库会自动给html设置font-size
 import 'amfe-flexible'
@@ -42,10 +45,20 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Uploader)
 Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
 // 定义全局组件
 Vue.component('hm-header', hmheader)
 Vue.component('hm-logo', hmlogo)
 Vue.component('hm-navbar', hmnavbar)
+Vue.component('hm-post', hmpost)
+Vue.prototype.$url = function(url) {
+  if (url.startsWith('http')) {
+    return url
+  } else {
+    return axios.defaults.baseURL + url
+  }
+}
 // 优化axios：将axios绑定到vue原型上
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://localhost:3000'

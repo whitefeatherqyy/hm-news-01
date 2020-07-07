@@ -30,7 +30,7 @@
         <template v-slot:title>我的跟帖</template>
         <template v-slot:tip>跟帖/回复</template>
       </hm-navbar>
-      <hm-navbar>
+      <hm-navbar @click="$router.push('/mystar')">
         <template v-slot:title>我的收藏</template>
         <template v-slot:tip>文章/视频</template>
       </hm-navbar>
@@ -57,9 +57,9 @@ export default {
   },
   //   获取相关信息
   async created() {
-    // const id = localStorage.getItem('user_id')
+    const id = localStorage.getItem('user_id')
     // console.log(this.$route)
-    const id = this.$route.query.id
+    // const id = this.$route.query.id
     const res = await this.$axios.get(`/user/${id}`)
     // console.log(res.data.data)
     const { gender, nickname } = res.data.data

@@ -7,6 +7,8 @@ import Myfollow from '../views/Myfollow.vue'
 import { Toast } from 'vant'
 import UserEdit from '../views/UserEdit.vue'
 import Mycomment from '../views/Mycomment.vue'
+import Mystar from '../views/MyStar.vue'
+import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -16,7 +18,9 @@ const router = new VueRouter({
     { path: '/user', component: User, name: 'user' },
     { path: '/user_edit', component: UserEdit, name: 'user_edit' },
     { path: '/myfollow', component: Myfollow, name: 'myfollow' },
-    { path: '/mycomment', component: Mycomment }
+    { path: '/mycomment', component: Mycomment },
+    { path: '/mystar', component: Mystar },
+    { path: '/', component: Home }
   ]
 })
 const pathname = ['/user', '/user_edit']
