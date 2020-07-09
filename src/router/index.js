@@ -9,6 +9,7 @@ import UserEdit from '../views/UserEdit.vue'
 import Mycomment from '../views/Mycomment.vue'
 import Mystar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
+import PostDetail from '../views/PostDetail.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -20,7 +21,8 @@ const router = new VueRouter({
     { path: '/myfollow', component: Myfollow, name: 'myfollow' },
     { path: '/mycomment', component: Mycomment },
     { path: '/mystar', component: Mystar },
-    { path: '/', component: Home }
+    { path: '/', component: Home },
+    { path: '/detail/:id', component: PostDetail, name: 'detail' }
   ]
 })
 const pathname = ['/user', '/user_edit']

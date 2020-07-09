@@ -1,21 +1,24 @@
 <template>
-  <div class="post">
-    <!--<div class="video" v-if="post.type === 2">
+  <div class="post" @click="$emit('click')">
+    <div class="video" v-if="post.type === 2">
       <div class="title">{{post.title}}</div>
       <div class="content">
-        使用video.js插件
+        <img :src="$url(post.cover[0].url)" alt />
+        <span class="iconfont iconshipin"></span>
       </div>
       <div class="info">
         {{post.user.nickname}}
         <span>{{post.comment_length}}跟帖</span>
       </div>
-    </div>-->
-    <div v-if="post.cover.length < 3" class="singleImg">
+    </div>
+    <div v-else-if="post.cover.length < 3" class="singleImg">
       <div class="content">
         <div class="title">{{ post.title }}</div>
         <div class="info">
           {{ post.user.nickname }}
-          <span> <slot></slot>跟帖 </span>
+          <span>
+            <slot></slot>跟帖
+          </span>
         </div>
       </div>
       <div class="cover">
@@ -31,7 +34,9 @@
       </div>
       <div class="info">
         {{ post.user.nickname }}
-        <span> <slot></slot>跟帖 </span>
+        <span>
+          <slot></slot>跟帖
+        </span>
       </div>
     </div>
   </div>
@@ -95,6 +100,7 @@ export default {
   .cover {
     margin-top: 10px;
     display: flex;
+    justify-content: space-between;
     img {
       //   flex: 1;
       width: 112px;
@@ -104,13 +110,37 @@ export default {
     }
   }
 }
-// .video {
-//   padding: 20px;
-//   border-bottom: 1px solid #cccccc;
-//   .title {
-//     font-size: 18px;
-//   }
-//   .content {
-//   }
-// }
+.video {
+  padding: 20px;
+  border-bottom: 1px solid #cccccc;
+  .title {
+    font-size: 18px;
+  }
+  .content {
+    position: relative;
+    img {
+      width: 100%;
+    }
+    span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      font-size: 40px;
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+  .info {
+    font-size: 14px;
+    color: #aaa;
+    margin-top: 10px;
+    span {
+      padding-left: 20px;
+    }
+  }
+}
 </style>

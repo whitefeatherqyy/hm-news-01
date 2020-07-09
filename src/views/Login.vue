@@ -65,6 +65,12 @@ export default {
         localStorage.setItem('user_id', res.data.data.user.id)
         // this.$router.push('/user')
         // this.$router.push(`/user?id=${res.data.data.user.id}`)
+        // console.log(this.$route)
+        // 登录后判断是否是从关注那里跳过来的，如果是，则返回；否则去个人中心
+        if (this.$route.query.back) {
+          this.$router.back()
+          return
+        }
         this.$router.push({
           path: '/user',
           query: {
