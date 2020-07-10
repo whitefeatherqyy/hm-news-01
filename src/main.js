@@ -92,6 +92,30 @@ Vue.filter('timer', input => {
 Vue.filter('timer2', input => {
   return moment(input).format('YYYY-MM-DD HH:MM')
 })
+Vue.filter('timer3', input => {
+  const now = Date.now()
+  input = new Date(input)
+  const time = (now - input) / 1000
+  const years = parseInt(time / 60 / 60 / 24 / 365)
+  const months = parseInt(time / 60 / 60 / 24 / 30)
+  const days = parseInt(time / 60 / 60 / 24)
+  const hours = parseInt(time / 60 / 60)
+  const minutes = parseInt(time / 60)
+
+  if (years > 0) {
+    return `${years}年前`
+  } else if (months > 0) {
+    return `${months}个月前`
+  } else if (days > 0) {
+    return `${days}天前`
+  } else if (hours > 0) {
+    return `${hours}小时前`
+  } else if (minutes > 0) {
+    return `${minutes}分前`
+  } else {
+    return `${time}秒前`
+  }
+})
 new Vue({
   router,
   render: h => h(App)

@@ -8,7 +8,7 @@
         <span class="iconfont iconsearch"></span>
         <span>搜索新闻</span>
       </div>
-      <div class="user">
+      <div class="user" @click="$router.push('/user')">
         <span class="iconfont iconwode"></span>
       </div>
     </div>
@@ -73,6 +73,10 @@ export default {
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
+        // 切换tab栏时，先清空数据/解决频繁切换tab栏报错的问题
+        if (this.pageIndex === 1) {
+          this.posts = []
+        }
         // console.log(data)
         this.posts = [...this.posts, ...data]
         // console.log(this.posts)
@@ -80,6 +84,7 @@ export default {
           this.finished = true
         }
         this.loading = false
+        this.refreshing = false
       }
     },
     onLoad() {
@@ -89,6 +94,8 @@ export default {
     async onRefresh() {
       this.pageIndex = 1
       this.posts = []
+      this.finished = false
+      this.loading = true
       await this.getPost(this.tablist[this.active].id)
       this.refreshing = false
     }
