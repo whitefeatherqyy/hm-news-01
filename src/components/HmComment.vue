@@ -5,7 +5,7 @@
       <div class="title">
         <div class="name">{{num}}楼：{{comment.user.nickname}}</div>
         <div class="time">{{comment.create_date | timer3}}</div>
-        <div class="post_comment">回复</div>
+        <div class="post_comment" @click="reply(comment.user.nickname,comment.id)">回复</div>
       </div>
       <div class="content">{{comment.content}}</div>
     </div>
@@ -24,6 +24,11 @@ export default {
     num: {
       type: Number,
       required: true
+    }
+  },
+  methods: {
+    reply(name, id) {
+      this.$bus.$emit('replyto', name, id)
     }
   }
 }

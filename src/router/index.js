@@ -10,6 +10,8 @@ import Mycomment from '../views/Mycomment.vue'
 import Mystar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
 import PostDetail from '../views/PostDetail.vue'
+import Manage from '../views/Manage.vue'
+import Search from '../views/Search.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -22,7 +24,9 @@ const router = new VueRouter({
     { path: '/mycomment', component: Mycomment },
     { path: '/mystar', component: Mystar },
     { path: '/', component: Home },
-    { path: '/detail/:id', component: PostDetail, name: 'detail' }
+    { path: '/detail/:id', component: PostDetail, name: 'detail' },
+    { path: '/manage', component: Manage },
+    { path: '/search', component: Search }
   ]
 })
 const pathname = ['/user', '/user_edit']

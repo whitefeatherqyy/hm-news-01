@@ -4,7 +4,7 @@
       <div class="icon">
         <span class="iconfont iconnew"></span>
       </div>
-      <div class="searchbox">
+      <div class="searchbox" @click="$router.push('/search')">
         <span class="iconfont iconsearch"></span>
         <span>搜索新闻</span>
       </div>
@@ -12,7 +12,9 @@
         <span class="iconfont iconwode"></span>
       </div>
     </div>
-
+    <div class="manage" ref="manage" @click="$router.push('/manage')">
+      <span>∨</span>
+    </div>
     <van-tabs v-model="active" animated sticky>
       <van-tab v-for="item in tablist" :title="item.name" :key="item.id">
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -41,6 +43,7 @@
 
 <script>
 export default {
+  name: 'home',
   data() {
     return {
       active: 0,
@@ -53,6 +56,9 @@ export default {
       finished: false,
       refreshing: false
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.scrollhandler)
   },
   methods: {
     async getTabList() {
@@ -98,10 +104,29 @@ export default {
       this.loading = true
       await this.getPost(this.tablist[this.active].id)
       this.refreshing = false
+    },
+    scrollhandler() {
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop
+      if (scrollTop > 80) {
+        this.$refs.manage.style.position = 'fixed'
+        this.$refs.manage.style.top = 0
+      } else {
+        this.$refs.manage.style.position = 'absolute'
+        this.$refs.manage.style.top = '80px'
+      }
     }
   },
   async created() {
-    await this.getTabList()
+    const activated = JSON.parse(localStorage.getItem('activated'))
+    if (activated) {
+      this.tablist = activated
+    } else {
+      await this.getTabList()
+    }
+
     const id = this.tablist[this.active].id
     // console.log(id)
     this.getPost(id)
@@ -152,6 +177,18 @@ export default {
       font-size: 36px;
     }
   }
+}
+.manage {
+  position: absolute;
+  position: fixed;
+  top: 80px;
+  right: 0;
+  width: 20px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
 }
 /deep/ .van-tab__text--ellipsis {
   font-size: 16px;

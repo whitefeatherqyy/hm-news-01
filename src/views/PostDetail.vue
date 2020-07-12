@@ -48,7 +48,11 @@
         </div>
       </section>
     </div>
-    <div class="post_comment">
+    <div class="post_nocomment" v-if="post.comment_length === 0">
+      <div class="title">精彩跟帖</div>
+      <p>暂无跟帖，抢占沙发</p>
+    </div>
+    <div class="post_comment" v-else>
       <div class="title">精彩跟帖</div>
       <div class="reply" v-for="item in comments" :key="item.id">
         <div class="infos">
@@ -59,14 +63,24 @@
             <div class="name">{{item.user.nickname}}</div>
             <div class="time">{{item.create_date | timer3}}</div>
           </div>
-          <div class="post_comment">回复</div>
+          <div class="post_comment" @click="$bus.$emit('replyto',item.user.nickname,item.id)">回复</div>
         </div>
         <hm-comment v-if="item.parent" :comment="item.parent" :num="getFloors(0,item)"></hm-comment>
         <div class="content">{{item.content}}</div>
       </div>
     </div>
-    <div class="my_apply">
-      <input type="text" placeholder="写跟帖" />
+    <div class="new_reply" v-if="replying">
+      <textarea
+        :placeholder="'回复' + replyName + ':'"
+        v-model="replyContent"
+        ref="textarea"
+        @blur="cancel"
+        v-focus
+      ></textarea>
+      <span @click="send">发送</span>
+    </div>
+    <div class="my_apply" v-else>
+      <input type="text" placeholder="写跟帖" @focus="reply" />
       <div class="icons">
         <span class="iconfont iconpinglun-"></span>
         <span class="iconfont iconshoucang" @click="star" :class="{star: post.has_star}"></span>
@@ -83,17 +97,37 @@ export default {
   components: {
     'hm-comment': HmComment
   },
+  // 自定义指令
+  directives: {
+    focus: {
+      inserted(el) {
+        el.focus()
+      }
+    }
+  },
   data() {
     return {
       post: {
         user: {}
       },
-      comments: []
+      comments: [],
+      replyContent: '',
+      replying: false,
+      replyName: '',
+      replyId: '',
+      pageIndex: 1,
+      pageSize: 5
     }
   },
   async created() {
     this.getDetail()
     this.getComments()
+    // 给bus注册事件
+    this.$bus.$on('replyto', (name, id) => {
+      this.replyName = name
+      this.replyId = id
+      this.replying = true
+    })
   },
   methods: {
     async getDetail() {
@@ -153,7 +187,11 @@ export default {
     // 获取文章列表
     async getComments() {
       const res = await this.$axios.get(
-        `/post_comment/${this.$route.params.id}`
+        `/post_comment/${this.$route.params.id}`,
+        {
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize
+        }
       )
       // console.log(res)
       const { statusCode, data } = res.data
@@ -168,6 +206,33 @@ export default {
       } else {
         return num
       }
+    },
+    async reply() {
+      this.replying = true
+      // 数据更新后等待DOM更新再进行DOM操作
+      // await this.$nextTick()
+      // this.$refs.textarea.focus()
+    },
+    cancel() {
+      if (!this.replyContent) {
+        this.replying = false
+      }
+    },
+    async send() {
+      const res = await this.$axios.post(`/post_comment/${this.post.id}`, {
+        content: this.replyContent,
+        parent_id: this.replyId
+      })
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast.success(message)
+        this.replying = false
+        this.replyContent = ''
+        this.replyName = ''
+        this.replyId = ''
+        this.getComments()
+        this.getDetail()
+      }
     }
   }
 }
@@ -176,46 +241,47 @@ export default {
 <style lang="less" scoped>
 .post_content {
   border-bottom: 4px solid #bbb;
-  .detail_header {
-    display: flex;
-    height: 60px;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    .left {
-      margin: 10px;
-      span {
-        font-size: 20px;
-      }
-    }
-    .center {
-      flex: 1;
-      span {
-        font-size: 60px;
-      }
-    }
-    .right {
-      margin: 10px;
-      .van-button {
-        border: 1px solid #ccc;
-        background-color: transparent;
-        font-size: 14px;
-        padding: 8px 20px;
-      }
-      .unfollow {
-        background-color: red;
-        color: white;
-        border: none;
-      }
-    }
-  }
   .post {
-    padding: 10px;
+    .detail_header {
+      display: flex;
+      height: 60px;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      .left {
+        margin: 10px;
+        span {
+          font-size: 20px;
+        }
+      }
+      .center {
+        flex: 1;
+        span {
+          font-size: 60px;
+        }
+      }
+      .right {
+        margin: 10px;
+        .van-button {
+          border: 1px solid #ccc;
+          background-color: transparent;
+          font-size: 14px;
+          padding: 8px 20px;
+        }
+        .unfollow {
+          background-color: red;
+          color: white;
+          border: none;
+        }
+      }
+    }
     .title {
+      padding: 10px;
       font-size: 20px;
       font-weight: bold;
       margin: 10px 0 6px;
     }
     .info {
+      padding: 10px;
       font-size: 16px;
       color: #aaa;
       margin-bottom: 10px;
@@ -223,8 +289,11 @@ export default {
         padding-left: 10px;
       }
     }
-    /deep/ img {
-      width: 100%;
+    .content {
+      padding: 10px;
+      /deep/ img {
+        width: 100%;
+      }
     }
   }
   .video {
@@ -290,6 +359,20 @@ export default {
     }
   }
 }
+.post_nocomment {
+  margin-top: 20px;
+  margin-bottom: 100px;
+  .title {
+    font-size: 28px;
+    text-align: center;
+  }
+  p {
+    font-size: 20px;
+    line-height: 60px;
+    color: #aaa;
+    text-align: center;
+  }
+}
 .post_comment {
   margin-top: 20px;
   margin-bottom: 60px;
@@ -331,6 +414,37 @@ export default {
       font-size: 20px;
       // line-height: 30px;
     }
+  }
+}
+.new_reply {
+  display: flex;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 160px;
+  padding: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  textarea {
+    flex: 1;
+    height: 140px;
+    // 禁止拖拽
+    resize: none;
+    padding: 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+  }
+  span {
+    margin-left: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 20px;
+    background-color: red;
+    color: white;
+    text-align: center;
   }
 }
 .my_apply {

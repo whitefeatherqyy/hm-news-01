@@ -93,29 +93,31 @@ Vue.filter('timer2', input => {
   return moment(input).format('YYYY-MM-DD HH:MM')
 })
 Vue.filter('timer3', input => {
-  const now = Date.now()
+  const now = new Date()
   input = new Date(input)
-  const time = (now - input) / 1000
-  const years = parseInt(time / 60 / 60 / 24 / 365)
-  const months = parseInt(time / 60 / 60 / 24 / 30)
-  const days = parseInt(time / 60 / 60 / 24)
-  const hours = parseInt(time / 60 / 60)
+  const time = parseInt((now - input) / 1000)
   const minutes = parseInt(time / 60)
-
-  if (years > 0) {
-    return `${years}年前`
-  } else if (months > 0) {
-    return `${months}个月前`
-  } else if (days > 0) {
-    return `${days}天前`
-  } else if (hours > 0) {
+  const hours = parseInt(minutes / 60)
+  const days = parseInt(hours / 24)
+  const months = parseInt(days / 30)
+  const years = parseInt(days / 365)
+  if (minutes < 1) {
+    return time + '秒前'
+  } else if (hours < 1) {
+    return `${minutes}分钟前`
+  } else if (days < 1) {
     return `${hours}小时前`
-  } else if (minutes > 0) {
-    return `${minutes}分前`
+  } else if (months < 1) {
+    return `${days}天前`
+  } else if (years < 1) {
+    return `${months}个月前`
   } else {
-    return `${time}秒前`
+    return `${years}年前`
   }
 })
+// 新建一个bus解决非父子组件传参的问题
+const bus = new Vue()
+Vue.prototype.$bus = bus
 new Vue({
   router,
   render: h => h(App)
