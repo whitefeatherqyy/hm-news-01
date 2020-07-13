@@ -81,17 +81,17 @@ export default {
       }
     }, 1000),
     // recommend: _.debounce(_this.fn, 500),
-    async fn() {
-      // console.log(this)
-      // console.log(_this)
-      const res = await this.$axios.get(
-        `/post_search_recommend?keyword=${this.key}`
-      )
-      const { statusCode, data } = res.data
-      if (statusCode === 200) {
-        console.log(data)
-      }
-    },
+    // async fn() {
+    //   // console.log(this)
+    //   // console.log(_this)
+    //   const res = await this.$axios.get(
+    //     `/post_search_recommend?keyword=${this.key}`
+    //   )
+    //   const { statusCode, data } = res.data
+    //   if (statusCode === 200) {
+    //     // console.log(data)
+    //   }
+    // },
     async send() {
       if (!this.key) return
       const res = await this.$axios.get('/post_search', {
@@ -100,9 +100,9 @@ export default {
         }
       })
       const { statusCode, data } = res.data
-      console.log(res)
+      // console.log(res)
       if (statusCode === 200) {
-        console.log(data)
+        // console.log(data)
         if (data.length === 0) {
           this.$toast('暂无相关数据')
         }

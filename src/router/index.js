@@ -1,17 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import User from '../views/User.vue'
-import Myfollow from '../views/Myfollow.vue'
 import { Toast } from 'vant'
-import UserEdit from '../views/UserEdit.vue'
-import Mycomment from '../views/Mycomment.vue'
-import Mystar from '../views/MyStar.vue'
-import Home from '../views/Home.vue'
-import PostDetail from '../views/PostDetail.vue'
-import Manage from '../views/Manage.vue'
-import Search from '../views/Search.vue'
+// 路由懒加载 异步组件 按模块打包
+const Login = () => import(/* webpackChunkName:'login' */ '../views/Login.vue')
+const Register = () =>
+  import(/* webpackChunkName:'login' */ '../views/Register.vue')
+const User = () => import(/* webpackChunkName:'users' */ '../views/User.vue')
+const Myfollow = () =>
+  import(/* webpackChunkName:'users' */ '../views/Myfollow.vue')
+const UserEdit = () =>
+  import(/* webpackChunkName:'users' */ '../views/UserEdit.vue')
+const Mycomment = () =>
+  import(/* webpackChunkName:'users' */ '../views/Mycomment.vue')
+const Mystar = () =>
+  import(/* webpackChunkName:'users' */ '../views/MyStar.vue')
+const Home = () => import(/* webpackChunkName:'home' */ '../views/Home.vue')
+const PostDetail = () =>
+  import(/* webpackChunkName:'home' */ '../views/PostDetail.vue')
+const Manage = () => import(/* webpackChunkName:'home' */ '../views/Manage.vue')
+const Search = () => import(/* webpackChunkName:'home' */ '../views/Search.vue')
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({

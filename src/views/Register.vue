@@ -1,14 +1,11 @@
 <template>
   <div>
-    <hm-header><template>注册</template></hm-header>
+    <hm-header>
+      <template>注册</template>
+    </hm-header>
     <hm-logo></hm-logo>
     <van-form @submit="onSubmit">
-      <van-field
-        v-model="user.username"
-        label="用户名"
-        placeholder="用户名"
-        :rules="rules.username"
-      />
+      <van-field v-model="user.username" label="用户名" placeholder="用户名" :rules="rules.username" />
       <van-field
         v-model="user.nickname"
         type="text"
@@ -24,12 +21,13 @@
         :rules="rules.password"
       />
       <div style="margin: 20px;">
-        <van-button round block type="info" native-type="submit">
-          提交
-        </van-button>
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
-    <p>已有账号？去<router-link to="/login">登录</router-link></p>
+    <p>
+      已有账号？去
+      <router-link to="/login">登录</router-link>
+    </p>
   </div>
 </template>
 
@@ -74,7 +72,7 @@ export default {
     //   提交发送请求
     async onSubmit() {
       const res = await this.$axios.post('/register', this.user)
-      console.log(res)
+      // console.log(res)
       if (res.data.statusCode === 200) {
         //   注册成功后跳转到登录页面并把参数传过去
         this.$toast.success('登陆成功')

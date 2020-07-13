@@ -136,7 +136,7 @@ export default {
       const res = await this.$axios.get(`/post/${id}`)
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        console.log(data)
+        // console.log(data)
         this.post = data
       }
     },
@@ -196,7 +196,7 @@ export default {
       // console.log(res)
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        console.log(data)
+        // console.log(data)
         this.comments = data
       }
     },

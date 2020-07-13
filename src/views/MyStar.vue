@@ -21,7 +21,7 @@ export default {
       const res = await this.$axios.get('/user_star')
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        console.log(data)
+        // console.log(data)
         this.posts = data
       }
     }

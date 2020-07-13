@@ -47,7 +47,7 @@ export default {
           pageSize: this.pageSize
         }
       })
-      console.log(res)
+      // console.log(res)
       const { data, statusCode } = res.data
       if (statusCode === 200) {
         this.list = [...this.list, ...data]

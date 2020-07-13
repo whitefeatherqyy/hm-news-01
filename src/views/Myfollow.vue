@@ -5,7 +5,7 @@
       <!--   -->
       <div class="follows" v-for="item in list" :key="item.id">
         <div class="avatar">
-          <img :src="$axios.defaults.baseURL + item.head_img" alt="" />
+          <img :src="$axios.defaults.baseURL + item.head_img" alt />
         </div>
         <div class="name">
           <p>{{ item.nickname }}</p>
@@ -29,7 +29,7 @@ export default {
   methods: {
     async getFollows() {
       const res = await this.$axios.get('/user_follows')
-      console.log(res)
+      // console.log(res)
       const { data, statusCode } = res.data
       if (statusCode === 200) {
         this.list = data
