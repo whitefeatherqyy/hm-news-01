@@ -22,7 +22,8 @@ import {
   List,
   Tab,
   Tabs,
-  PullRefresh
+  PullRefresh,
+  Sticky
 } from 'vant'
 // 该库会自动给html设置font-size
 import 'amfe-flexible'
@@ -49,6 +50,7 @@ Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
+Vue.use(Sticky)
 // 定义全局组件
 Vue.component('hm-header', hmheader)
 Vue.component('hm-logo', hmlogo)

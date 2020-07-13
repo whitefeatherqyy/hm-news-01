@@ -12,9 +12,11 @@
         <span class="iconfont iconwode"></span>
       </div>
     </div>
-    <div class="manage" ref="manage" @click="$router.push('/manage')">
-      <span>∨</span>
-    </div>
+    <van-sticky>
+      <div class="manage" ref="manage" @click="$router.push('/manage')">
+        <span>∨</span>
+      </div>
+    </van-sticky>
     <van-tabs v-model="active" animated sticky>
       <van-tab v-for="item in tablist" :title="item.name" :key="item.id">
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -57,9 +59,9 @@ export default {
       refreshing: false
     }
   },
-  mounted() {
-    window.addEventListener('scroll', this.scrollhandler)
-  },
+  // mounted() {
+  //   window.addEventListener('scroll', this.scrollhandler)
+  // },
   methods: {
     async getTabList() {
       const res = await this.$axios.get('/category')
@@ -104,20 +106,20 @@ export default {
       this.loading = true
       await this.getPost(this.tablist[this.active].id)
       this.refreshing = false
-    },
-    scrollhandler() {
-      const scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop
-      if (scrollTop > 80) {
-        this.$refs.manage.style.position = 'fixed'
-        this.$refs.manage.style.top = 0
-      } else {
-        this.$refs.manage.style.position = 'absolute'
-        this.$refs.manage.style.top = '80px'
-      }
     }
+    // scrollhandler() {
+    //   const scrollTop =
+    //     window.pageYOffset ||
+    //     document.documentElement.scrollTop ||
+    //     document.body.scrollTop
+    //   if (scrollTop > 80) {
+    //     this.$refs.manage.style.position = 'fixed'
+    //     this.$refs.manage.style.top = 0
+    //   } else {
+    //     this.$refs.manage.style.position = 'absolute'
+    //     this.$refs.manage.style.top = '80px'
+    //   }
+    // }
   },
   async created() {
     const activated = JSON.parse(localStorage.getItem('activated'))
@@ -180,15 +182,17 @@ export default {
 }
 .manage {
   position: absolute;
-  position: fixed;
-  top: 80px;
   right: 0;
-  width: 20px;
+  width: 10%;
   height: 44px;
   line-height: 44px;
   font-size: 20px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #fff;
   z-index: 9999;
+  text-align: center;
+}
+/deep/ .van-tabs .van-sticky {
+  width: 90%;
 }
 /deep/ .van-tab__text--ellipsis {
   font-size: 16px;

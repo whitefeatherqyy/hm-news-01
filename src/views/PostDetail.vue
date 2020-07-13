@@ -216,6 +216,9 @@ export default {
     cancel() {
       if (!this.replyContent) {
         this.replying = false
+        this.replyContent = ''
+        this.replyName = ''
+        this.replyId = ''
       }
     },
     async send() {

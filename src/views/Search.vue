@@ -1,49 +1,89 @@
 <template>
   <div class="search">
     <div class="header">
-      <span class="iconfont iconjiantou2"></span>
+      <span class="iconfont iconjiantou2" @click="$router.back()"></span>
+      <!-- @input="recommend" -->
       <input
         type="search"
         placeholder="通灵兽消失之谜"
-        @input="recommend"
         v-model="key"
+        @input="recommend"
+        @keyup.enter="send"
       />
       <span class="iconfont iconsearch"></span>
-      <span>搜索</span>
+      <span @click="send">搜索</span>
     </div>
-    <div class="history">
-      <h5>历史记录</h5>
-      <div class="list">
-        <div class="record" v-for="item in records" :key="item.id">
-          {{ item }}
+    <div class="recommend" v-if="recommendList.length > 0 ">
+      <ul>
+        <li
+          v-for="item in recommendList"
+          :key="item.id"
+          @click="search(item.title)"
+          class="txt-one-cut"
+        >{{item.title}}</li>
+      </ul>
+    </div>
+    <div class="searchList" v-else-if="searchList.length > 0">
+      <hm-post
+        v-for="item in searchList"
+        :key="item.id"
+        :post="item"
+        @click="$router.push(`/detail/${item.id}`)"
+      >
+        <template>{{item.comment_length}}</template>
+      </hm-post>
+    </div>
+    <div v-else>
+      <div class="history">
+        <h5>历史记录</h5>
+        <div class="list">
+          <div
+            class="record txt-one-cut"
+            v-for="item in records"
+            :key="item"
+            @click="search(item)"
+          >{{ item }}</div>
         </div>
       </div>
+      <div class="hot_search">
+        <h5>热门搜索</h5>
+      </div>
     </div>
-    <div class="hot_search"></div>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
+// let _this = {}
 export default {
   data() {
     return {
       records: [],
-      key: ''
+      key: '',
+      searchList: [],
+      recommendList: []
     }
   },
   methods: {
-    //   防抖函数
+    //   防抖函数 此处不能使用箭头函数，箭头函数中this指向外部的this，外部的this不指向Vue实例
     recommend: _.debounce(async function() {
+      if (!this.key) {
+        this.recommendList = []
+        return
+      }
       const res = await this.$axios.get(
         `/post_search_recommend?keyword=${this.key}`
       )
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        console.log(data)
+        // console.log(data)
+        this.recommendList = data
       }
     }, 1000),
+    // recommend: _.debounce(_this.fn, 500),
     async fn() {
+      // console.log(this)
+      // console.log(_this)
       const res = await this.$axios.get(
         `/post_search_recommend?keyword=${this.key}`
       )
@@ -51,8 +91,42 @@ export default {
       if (statusCode === 200) {
         console.log(data)
       }
+    },
+    async send() {
+      if (!this.key) return
+      const res = await this.$axios.get('/post_search', {
+        params: {
+          keyword: this.key
+        }
+      })
+      const { statusCode, data } = res.data
+      console.log(res)
+      if (statusCode === 200) {
+        console.log(data)
+        if (data.length === 0) {
+          this.$toast('暂无相关数据')
+        }
+        this.searchList = data
+        this.records = this.records.filter(item => item !== this.key)
+        this.records.unshift(this.key)
+        localStorage.setItem('history', JSON.stringify(this.records))
+        this.key = ''
+        this.recommendList = []
+      }
+    },
+    async search(title) {
+      this.key = title
+      await this.send()
+      this.recommendList = []
     }
+  },
+  created() {
+    const history = JSON.parse(localStorage.getItem('history'))
+    this.records = history || []
   }
+  // beforeCreate() {
+  //   _this = this
+  // }
 }
 </script>
 
@@ -80,9 +154,31 @@ export default {
       left: 40px;
     }
   }
+  .recommend {
+    ul {
+      li {
+        border-bottom: 1px solid #ccc;
+        font-size: 18px;
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
   .history {
-    font-size: 24px;
+    // font-size: 24px;
     margin-top: 20px;
+    overflow: hidden;
+    .list {
+      .record {
+        float: left;
+        width: 60px;
+        height: 40px;
+        font-size: 16px;
+        line-height: 40px;
+        text-align: center;
+        margin: 0px 10px;
+      }
+    }
   }
 }
 </style>
